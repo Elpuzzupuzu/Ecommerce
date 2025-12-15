@@ -18,6 +18,10 @@ import reviewReducer from "../features/reviews/reviewSlice";
 // Nuevo slice de facturas
 import facturasReducer from "../features/facturas/facturasSlice";
 
+// ✅ NUEVO: filtros
+import filtersReducer from "../features/filters/filtersSlice";
+import paginationReducer from "../features/pagination/productsUI/paginationSlice"
+
 export const store = configureStore({
   reducer: {
     products: productsReducer,
@@ -31,10 +35,13 @@ export const store = configureStore({
     mainCategory: mainCategoryReducer,
     location: locationReducer,
     subCategory: subCategoryReducer,
-
     reviews: reviewReducer,
 
-    // Agregado
     facturas: facturasReducer,
+
+    // 🔥 FUENTE DE VERDAD DE FILTROS
+    filters: filtersReducer,
+    ////PAGINACION
+    pagination: paginationReducer,
   },
 });

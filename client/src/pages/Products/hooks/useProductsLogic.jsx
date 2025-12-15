@@ -1,123 +1,93 @@
-// hooks/useProductsLogic.js
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../../features/products/productsSlice";
+import {
+  setPage,
+  setLimit,
+} from "../../../features/pagination/productsUI/paginationSlice";
 
 export const useProductsLogic = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    // Redux store
-    const { items: products, total, loading, error } = useSelector((s) => s.products);
+  // -------------------------------------------------
+  // REDUX
+  // -------------------------------------------------
+  const { items: products, total, loading, error } = useSelector(
+    (s) => s.products
+  );
 
-    // Estados locales
-    const [currentPage, setPage] = useState(1);
-    const [itemsPerPage, setItemsPerPageState] = useState(14);
-    const [viewMode, setViewMode] = useState("grid");
-    const [searchTerm, setSearchTermState] = useState("");
-    const [sortBy, setSortBy] = useState("name");
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+  const appliedFilters = useSelector((s) => s.filters.applied);
+  const searchQuery = useSelector((s) => s.filters.searchQuery);
+  const { page, limit } = useSelector((s) => s.pagination);
 
-    // Filtros
-    const [filters, setFiltersState] = useState({
-        mainCategoryId: null,
-        priceRange: "",
-    });
+  // -------------------------------------------------
+  // UI LOCAL STATE (correcto que sea local)
+  // -------------------------------------------------
+  const [viewMode, setViewMode] = useState("grid");
+  const [sortBy, setSortBy] = useState("name");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // =====================================================================
-    // LOAD PRODUCTS — Paso 1: enviar timestamp al backend
-    // =====================================================================
+  // -------------------------------------------------
+  // FETCH CENTRAL — ÚNICO LUGAR
+  // -------------------------------------------------
+  useEffect(() => {
+    const timestamp = Date.now();
 
-    const loadProducts = useCallback((page, filters, search, limit) => {
+    const [minStr, maxStr] = (appliedFilters.priceRange || "").split("-");
+    const minPrice = minStr ? parseFloat(minStr) : undefined;
+    const maxPrice =
+      maxStr && maxStr !== "+" ? parseFloat(maxStr) : undefined;
 
-        // Timestamp para evitar respuestas cacheadas
-        const timestamp = Date.now();
+    dispatch(
+      fetchProducts({
+        page,
+        limit,
+        mainCategoryId: appliedFilters.mainCategoryId,
+        subCategoryId: appliedFilters.subCategoryId,
+        searchQuery: searchQuery || undefined,
+        minPrice,
+        maxPrice,
+        timestamp,
+      })
+    );
+  }, [dispatch, page, limit, appliedFilters, searchQuery]);
 
-        // Parseo de priceRange
-        const [minStr, maxStr] = (filters.priceRange || "").split("-");
-        const minPrice = minStr ? parseFloat(minStr) : undefined;
-        const maxPrice = maxStr && maxStr !== "+" ? parseFloat(maxStr) : undefined;
+  // -------------------------------------------------
+  // ORDENAMIENTO FE
+  // -------------------------------------------------
+  const sortedProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
 
-        dispatch(
-            fetchProducts({
-                page,
-                limit,
-                mainCategoryId: filters.mainCategoryId,
-                searchQuery: search,
-                minPrice,
-                maxPrice,
-                timestamp, // ← AQUÍ LO ENVIAMOS
-            })
-        );
-    }, [dispatch]);
+    return [...products].sort((a, b) =>
+      sortBy === "price"
+        ? (a.precio || 0) - (b.precio || 0)
+        : a.nombre.localeCompare(b.nombre)
+    );
+  }, [products, sortBy]);
 
-    // =====================================================================
-    // HANDLERS — Actualizan estado del FE
-    // =====================================================================
+  const totalPages = Math.ceil(total / limit);
 
-    const handleSetCurrentPage = (page) => {
-        setPage(page);
-    };
-
-    const handleSetSearchTerm = (term) => {
-        setPage(1);
-        setSearchTermState(term);
-    };
-
-    const handleSetFilters = (newFilters) => {
-        setPage(1);
-        setFiltersState(newFilters);
-    };
-
-    const handleSetItemsPerPage = (limit) => {
-        setPage(1);
-        setItemsPerPageState(limit);
-    };
-
-    // =====================================================================
-    // EFECTO CENTRAL — Se ejecuta cuando cambia page, filtros, search o limit
-    // =====================================================================
-
-    useEffect(() => {
-        loadProducts(currentPage, filters, searchTerm, itemsPerPage);
-    }, [currentPage, filters, searchTerm, itemsPerPage, loadProducts]);
-
-    // =====================================================================
-    // ORDENAMIENTO FE
-    // =====================================================================
-
-    const sortedProducts = useMemo(() => {
-        return [...products].sort((a, b) =>
-            sortBy === "price"
-                ? (a.precio || 0) - (b.precio || 0)
-                : a.nombre.localeCompare(b.nombre)
-        );
-    }, [products, sortBy]);
-
-    const totalPages = Math.ceil(total / itemsPerPage);
-
-    return {
-        products,
-        loading,
-        error,
-        currentProducts: sortedProducts,
-        totalPages,
-        currentPage,
-        setCurrentPage: handleSetCurrentPage,
-        viewMode,
-        setViewMode,
-        searchTerm,
-        setSearchTerm: handleSetSearchTerm,
-        sortBy,
-        setSortBy,
-        itemsPerPage,
-        setItemsPerPage: handleSetItemsPerPage,
-        sidebarOpen,
-        setSidebarOpen,
-        filters,
-        setFilters: handleSetFilters,
-        sortedProducts,
-        getFilterCount: () =>
-            (filters.mainCategoryId ? 1 : 0) +
-            (filters.priceRange ? 1 : 0),
-    };
+  // -------------------------------------------------
+  // API DEL HOOK
+  // -------------------------------------------------
+  return {
+    loading,
+    error,
+    currentProducts: sortedProducts,
+    totalPages,
+    currentPage: page,
+    setCurrentPage: (p) => dispatch(setPage(p)),
+    itemsPerPage: limit,
+    setItemsPerPage: (l) => dispatch(setLimit(l)),
+    viewMode,
+    setViewMode,
+    sortBy,
+    setSortBy,
+    sidebarOpen,
+    setSidebarOpen,
+    getFilterCount: () =>
+      (appliedFilters.mainCategoryId ? 1 : 0) +
+      (appliedFilters.subCategoryId ? 1 : 0) +
+      (appliedFilters.priceRange ? 1 : 0),
+  };
 };

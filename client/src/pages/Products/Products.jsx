@@ -1,17 +1,19 @@
 // components/ProductsPage.jsx
-
 import React, { useRef } from "react";
 import { useProductsLogic } from "./hooks/useProductsLogic";
+
 import ProductsToolbar from "./components/ProductsToolbar";
 import ProductsGrid from "./components/ProductsGrid";
 import ProductsPagination from "./components/ProductsPagination";
 import NoResults from "./components/NoResult";
 import FilterSidebar from "./ProductFilter/ProductFilter";
-import heroImage from "../../../src/assets/images/pipes.jpg";
+
 import HeroSection from "../../components/HeroSection/HeroSection";
+import heroImage from "../../../src/assets/images/pipes.jpg";
 
 const ProductsPage = ({ addToCart }) => {
-  const logic = useProductsLogic();
+  const toolbarRef = useRef(null);
+
   const {
     loading,
     error,
@@ -19,33 +21,35 @@ const ProductsPage = ({ addToCart }) => {
     totalPages,
     currentPage,
     setCurrentPage,
-    viewMode,
-    setViewMode,
-    searchTerm,
-    setSearchTerm,
-    sortBy,
-    setSortBy,
     itemsPerPage,
     setItemsPerPage,
+    viewMode,
+    setViewMode,
+    sortBy,
+    setSortBy,
     sidebarOpen,
     setSidebarOpen,
-    filters,
-    setFilters,
-    availableCategories,
     getFilterCount,
-  } = logic;
+  } = useProductsLogic();
 
-  // Asegura que nunca sea undefined
-  const safeProducts = Array.isArray(currentProducts) ? currentProducts : [];
+  const safeProducts = Array.isArray(currentProducts)
+    ? currentProducts
+    : [];
 
-  const toolbarRef = useRef(null);
-
-  if (loading)
-    return <div className="flex justify-center p-20">Cargando...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center p-20">
+        Cargando...
+      </div>
+    );
+  }
 
   if (error) {
     const errorMessage =
-      typeof error === "string" ? error : error.message || "Error desconocido";
+      typeof error === "string"
+        ? error
+        : error?.message || "Error desconocido";
+
     return (
       <div className="text-center text-red-600 p-20">
         Error: {errorMessage}
@@ -59,19 +63,15 @@ const ProductsPage = ({ addToCart }) => {
 
         <ProductsToolbar
           ref={toolbarRef}
-          {...{
-            searchTerm,
-            setSearchTerm,
-            sortBy,
-            setSortBy,
-            itemsPerPage,
-            setItemsPerPage,
-            viewMode,
-            setViewMode,
-            sidebarOpen,
-            setSidebarOpen,
-            getFilterCount,
-          }}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          getFilterCount={getFilterCount}
         />
 
         {safeProducts.length > 0 ? (
@@ -92,17 +92,13 @@ const ProductsPage = ({ addToCart }) => {
         ) : (
           <NoResults
             message="No hay productos que coincidan con tu búsqueda."
-            onClearFilters={() => setFilters({})}
           />
         )}
       </div>
 
       <FilterSidebar
-        filters={filters}
-        onFilterChange={setFilters}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(false)}
-        categories={availableCategories}
       />
 
       <HeroSection heroImage={heroImage} />

@@ -1,9 +1,17 @@
-import React from 'react';
-import { Sliders, X } from 'lucide-react';
-import { useFilterLogic } from './components/useFilterLogic';
-import { CategorySection, SubcategorySection, PriceRangeSection } from './components/FilterSections';
+import React from "react";
+import { Sliders, X } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useFilterLogic } from "./components/useFilterLogic";
+import {
+  CategorySection,
+  SubcategorySection,
+  PriceRangeSection,
+} from "./components/FilterSections";
 
-const FilterSidebar = ({ filters, onFilterChange, isOpen, onToggle }) => {
+const FilterSidebar = ({ isOpen, onToggle }) => {
+  // 🔥 Filtros aplicados desde Redux
+  const appliedFilters = useSelector((s) => s.filters.applied);
+
   const {
     pendingFilters,
     isAnimating,
@@ -12,46 +20,34 @@ const FilterSidebar = ({ filters, onFilterChange, isOpen, onToggle }) => {
     handleSubCategoryChange,
     handlePriceRangeChange,
     applyFilters,
-    clearAllFilters,
+    clearAll,
     getFilterCount,
-  } = useFilterLogic(filters, onFilterChange, isOpen);
+  } = useFilterLogic(isOpen);
 
   // ------------------------------------
-  // ✔ Detectar filtros activos y cambios pendientes
+  // ✔ Estados derivados (PUROS)
   // ------------------------------------
- // Detecta si hay filtros activos
-const hasActiveFilters =
-  pendingFilters.mainCategoryId ||
-  pendingFilters.subCategoryId ||
-  pendingFilters.priceRange;
+  const hasActiveFilters =
+    appliedFilters.mainCategoryId ||
+    appliedFilters.subCategoryId ||
+    appliedFilters.priceRange;
 
-// Detecta si hay cambios pendientes respecto a los filtros aplicados
-const hasPendingChanges =
-  pendingFilters.mainCategoryId !== filters.mainCategoryId ||
-  pendingFilters.subCategoryId !== filters.subCategoryId ||
-  pendingFilters.priceRange !== filters.priceRange;
+  const hasPendingChanges =
+    pendingFilters.mainCategoryId !== appliedFilters.mainCategoryId ||
+    pendingFilters.subCategoryId !== appliedFilters.subCategoryId ||
+    pendingFilters.priceRange !== appliedFilters.priceRange;
 
-// Botón habilitado si hay cambios pendientes o filtros activos
-const canApplyFilters = hasPendingChanges || hasActiveFilters;
+  const canApplyFilters = hasPendingChanges;
 
-console.log("[BUTTON STATE]", {
-  hasActiveFilters,
-  hasPendingChanges,
-  canApplyFilters,
-  pendingFilters,
-  filters
-});
-
-
-  // Evita el renderizado innecesario cuando está cerrado y la animación termina
+  // Evita render innecesario
   if (!isOpen && !isAnimating) return null;
 
   return (
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ease-out ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onToggle}
         onTransitionEnd={() => !isOpen && setIsAnimating(false)}
@@ -60,7 +56,7 @@ console.log("[BUTTON STATE]", {
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-all duration-500 ${
-          isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+          isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
         }`}
         onTransitionEnd={() => !isOpen && setIsAnimating(false)}
       >
@@ -78,68 +74,58 @@ console.log("[BUTTON STATE]", {
               )}
             </h3>
 
-            <button onClick={onToggle} className="p-2 hover:bg-gray-200 rounded-lg">
+            <button
+              onClick={onToggle}
+              className="p-2 hover:bg-gray-200 rounded-lg"
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* CONTENIDO */}
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
-
             <CategorySection
               pendingFilters={pendingFilters}
-              onCategoryChange={(id) => {
-                console.log("[CATEGORY CHANGE] ID:", id);
-                handleCategoryChange(id);
-              }}
+              onCategoryChange={handleCategoryChange}
             />
 
             <SubcategorySection
               pendingFilters={pendingFilters}
-              onSubCategoryChange={(id) => {
-                console.log("[SUBCATEGORY CHANGE] ID:", id);
-                handleSubCategoryChange(id);
-              }}
+              onSubCategoryChange={handleSubCategoryChange}
             />
 
             <PriceRangeSection
               pendingFilters={pendingFilters}
-              onPriceRangeChange={(range) => {
-                console.log("[PRICE RANGE CHANGE] range:", range);
-                handlePriceRangeChange(range);
-              }}
+              onPriceRangeChange={handlePriceRangeChange}
             />
 
-            {/* BOTÓN LIMPIAR */}
+            {/* LIMPIAR */}
             <button
               onClick={() => {
-                console.log("[BUTTON CLICK] Limpiar filtros");
-                clearAllFilters();
-                onToggle(); // cerrar al limpiar
+                clearAll();
+                onToggle();
               }}
-              className="w-full py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              disabled={!hasActiveFilters} // activado si hay filtros activos
+              disabled={!hasActiveFilters}
+              className="w-full py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
             >
-              Limpiar Filtros
+              Limpiar filtros
             </button>
 
-            {/* BOTÓN APLICAR */}
+            {/* APLICAR */}
             <button
               onClick={() => {
-                console.log("[BUTTON CLICK] Aplicar filtros");
                 applyFilters();
-                onToggle(); // cerrar al aplicar
+                onToggle();
               }}
-              disabled={!canApplyFilters} // activado solo si hay cambios pendientes
+              disabled={!canApplyFilters}
               className={`w-full py-2 px-4 text-white rounded-lg transition ${
-                hasPendingChanges
-                  ? 'bg-blue-600 hover:bg-blue-700'
-                  : 'bg-gray-300 cursor-not-allowed'
+                canApplyFilters
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-300 cursor-not-allowed"
               }`}
             >
               Aplicar filtros
             </button>
-
           </div>
         </div>
       </div>
@@ -147,18 +133,26 @@ console.log("[BUTTON STATE]", {
   );
 };
 
-// Botón de toggle
-export const FilterToggleButton = ({ isOpen, onToggle, filterCount = 0 }) => {
+// -------------------------------------------------
+// BOTÓN TOGGLE
+// -------------------------------------------------
+export const FilterToggleButton = ({ isOpen, onToggle }) => {
+  const filterCount = useSelector((s) =>
+    (s.filters.applied.mainCategoryId ? 1 : 0) +
+    (s.filters.applied.subCategoryId ? 1 : 0) +
+    (s.filters.applied.priceRange ? 1 : 0)
+  );
+
   return (
     <button
       onClick={onToggle}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
         isOpen
-          ? 'bg-blue-600 text-white border-blue-600'
-          : 'bg-white text-gray-700 border-gray-300'
+          ? "bg-blue-600 text-white border-blue-600"
+          : "bg-white text-gray-700 border-gray-300"
       }`}
     >
-      <Sliders className={`w-4 h-4 ${isOpen ? 'rotate-180' : ''}`} />
+      <Sliders className="w-4 h-4" />
       <span>Filtros</span>
 
       {filterCount > 0 && (

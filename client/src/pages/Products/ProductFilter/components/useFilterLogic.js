@@ -1,179 +1,85 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchProducts } from '../../../../features/products/productsSlice';
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setFilters,
+  clearFilters,
+} from "../../../../features/filters/filtersSlice";
 
-export const useFilterLogic = (filters, onFilterChange, isOpen) => {
+export const useFilterLogic = (isOpen) => {
   const dispatch = useDispatch();
+
+  // 🔥 FUENTE DE VERDAD
+  const appliedFilters = useSelector((s) => s.filters.applied);
+
+  // 🧠 Estado SOLO de UI
+  const [pendingFilters, setPendingFilters] = useState(appliedFilters);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // 🔥 LOS PENDING INICIAN SIEMPRE DESDE FILTERS
-  const [pendingFilters, setPendingFilters] = useState({
-    mainCategoryId: filters.mainCategoryId,
-    subCategoryId: filters.subCategoryId,
-    priceRange: filters.priceRange,
-  });
-
-  // 🔥 FUENTE DE VERDAD DEL ESTADO
-  const pendingRef = useRef(pendingFilters);
-
   // -------------------------------------------------
-  // 🔄 SYNC REF CUANDO pendingFilters CAMBIA
-  // -------------------------------------------------
-  useEffect(() => {
-    pendingRef.current = pendingFilters;
-    console.log("[SYNC REF] pendingRef.current:", pendingRef.current);
-  }, [pendingFilters]);
-
-  // -------------------------------------------------
-  // 🟦 LOG DE CAMBIO DE FILTERS (PROPS)
-  // -------------------------------------------------
-  useEffect(() => {
-    console.log("[PROPS FILTERS] filters changed:", filters);
-  }, [filters]);
-
-  // -------------------------------------------------
-  // 📌 SYNC COMPLETO AL ABRIR SIDEBAR
+  // 🔄 Sync cuando se abre el sidebar
   // -------------------------------------------------
   useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
-
-      const synced = {
-        mainCategoryId: filters.mainCategoryId,
-        subCategoryId: filters.subCategoryId,
-        priceRange: filters.priceRange,
-      };
-
-      console.log("[SIDEBAR OPEN] synced pendingFilters:", synced);
-
-      pendingRef.current = synced;
-      setPendingFilters(synced);
+      setPendingFilters(appliedFilters);
     }
-  }, [isOpen, filters]);
+  }, [isOpen, appliedFilters]);
 
   // -------------------------------------------------
-  // 🟧 HANDLER CATEGORY (SIN SETSTATE PREV)
+  // 🟧 CATEGORY
   // -------------------------------------------------
   const handleCategoryChange = useCallback((categoryId) => {
-    const prev = pendingRef.current;
-
-    const updated = {
+    setPendingFilters((prev) => ({
       ...prev,
       mainCategoryId: prev.mainCategoryId === categoryId ? null : categoryId,
-      subCategoryId: null
-    };
-
-    console.log("[HANDLE CATEGORY] from", prev, "to", updated);
-
-    pendingRef.current = updated;
-    setPendingFilters(updated);
+      subCategoryId: null, // regla de negocio
+    }));
   }, []);
 
   // -------------------------------------------------
-  // 🟧 HANDLER SUBCATEGORY
+  // 🟧 SUBCATEGORY
   // -------------------------------------------------
   const handleSubCategoryChange = useCallback((subId) => {
-    const prev = pendingRef.current;
-
-    const updated = {
+    setPendingFilters((prev) => ({
       ...prev,
-      subCategoryId: prev.subCategoryId === subId ? null : subId
-    };
-
-    console.log("[HANDLE SUBCATEGORY] from", prev, "to", updated);
-
-    pendingRef.current = updated;
-    setPendingFilters(updated);
+      subCategoryId: prev.subCategoryId === subId ? null : subId,
+    }));
   }, []);
 
   // -------------------------------------------------
-  // 🟧 HANDLER PRICE RANGE
+  // 🟧 PRICE RANGE
   // -------------------------------------------------
   const handlePriceRangeChange = useCallback((range) => {
-    const prev = pendingRef.current;
-
-    const updated = {
+    setPendingFilters((prev) => ({
       ...prev,
-      priceRange: prev.priceRange === range ? "" : range
-    };
-
-    console.log("[HANDLE PRICE RANGE] from", prev, "to", updated);
-
-    pendingRef.current = updated;
-    setPendingFilters(updated);
+      priceRange: prev.priceRange === range ? "" : range,
+    }));
   }, []);
 
   // -------------------------------------------------
-  // 🟩 APPLY FILTERS — SIEMPRE USA pendingRef.current
+  // 🟩 APPLY FILTERS (🔥 único punto de verdad)
   // -------------------------------------------------
   const applyFilters = useCallback(() => {
-    const pf = pendingRef.current;
-    console.log("[APPLY FILTERS] pendingRef.current:", pf);
-
-    onFilterChange({
-      mainCategoryId: pf.mainCategoryId,
-      subCategoryId: pf.subCategoryId,
-      priceRange: pf.priceRange,
-      searchQuery: filters.searchQuery || undefined,
-    });
-
-    const [minStr, maxStr] = (pf.priceRange || "").split("-");
-    const minPrice = minStr ? parseFloat(minStr) : undefined;
-    const maxPrice = maxStr && maxStr !== "+" ? parseFloat(maxStr) : undefined;
-
-    console.log("[DISPATCH FETCH PRODUCTS]", {
-      mainCategoryId: pf.mainCategoryId,
-      subCategoryId: pf.subCategoryId,
-      minPrice,
-      maxPrice
-    });
-
-    dispatch(fetchProducts({
-      page: 1,
-      limit: 14,
-      mainCategoryId: pf.mainCategoryId,
-      subCategoryId: pf.subCategoryId,
-      searchQuery: filters.searchQuery || undefined,
-      minPrice,
-      maxPrice
-    }));
-  }, [dispatch, filters.searchQuery, onFilterChange]);
+    dispatch(setFilters(pendingFilters));
+  }, [dispatch, pendingFilters]);
 
   // -------------------------------------------------
-  // 🧹 CLEAR ALL FILTERS
+  // 🧹 CLEAR ALL
   // -------------------------------------------------
-  const clearAllFilters = useCallback(() => {
-    const cleared = {
-      mainCategoryId: null,
-      subCategoryId: null,
-      priceRange: ""
-    };
-
-    console.log("[CLEAR ALL FILTERS] setting:", cleared);
-
-    pendingRef.current = cleared;
-    setPendingFilters(cleared);
-
-    onFilterChange({
-      ...cleared,
-      searchQuery: filters.searchQuery
-    });
-
-    dispatch(fetchProducts({
-      page: 1,
-      limit: 14,
-      searchQuery: filters.searchQuery || undefined
-    }));
-  }, [dispatch, filters.searchQuery, onFilterChange]);
+  const clearAll = useCallback(() => {
+    dispatch(clearFilters());
+  }, [dispatch]);
 
   // -------------------------------------------------
-  // 🔢 CONTADOR DE FILTROS ACTIVOS
+  // 🔢 CONTADOR (desde Redux)
   // -------------------------------------------------
-  const getFilterCount = useCallback(() =>
-    (filters.mainCategoryId ? 1 : 0) +
-    (filters.subCategoryId ? 1 : 0) +
-    (filters.priceRange ? 1 : 0)
-  , [filters]);
+  const getFilterCount = useCallback(
+    () =>
+      (appliedFilters.mainCategoryId ? 1 : 0) +
+      (appliedFilters.subCategoryId ? 1 : 0) +
+      (appliedFilters.priceRange ? 1 : 0),
+    [appliedFilters]
+  );
 
   return {
     pendingFilters,
@@ -183,7 +89,7 @@ export const useFilterLogic = (filters, onFilterChange, isOpen) => {
     handleSubCategoryChange,
     handlePriceRangeChange,
     applyFilters,
-    clearAllFilters,
+    clearAll,
     getFilterCount,
   };
 };
