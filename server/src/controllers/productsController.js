@@ -8,32 +8,70 @@ export const ProductsController = {
 
 async getAllProducts(req, res, next) {
     try {
+        console.log("──────────────────────────────────────────");
+        console.log("📥 GET /products → Parámetros recibidos (RAW):");
+        console.log("query:", req.query);
+
         const { 
             page = 1, 
             limit = 10,
             mainCategoryId, 
             subCategoryId,
-            searchQuery // 👈 Nuevo: Término de búsqueda
+            searchQuery,
+            minPrice,
+            maxPrice
         } = req.query;
 
-        // console.log("📄 Parámetros de consulta:", { page, limit, mainCategoryId, subCategoryId, searchQuery });
+        console.log("📦 GET /products → Parámetros procesados:");
+        console.log({
+            page: Number(page),
+            limit: Number(limit),
+            mainCategoryId: mainCategoryId ?? null,
+            subCategoryId: subCategoryId ?? null,
+            searchQuery: searchQuery ?? "",
+            minPrice: minPrice ?? null,
+            maxPrice: maxPrice ?? null
+        });
 
-        // Pasar el nuevo parámetro al Servicio
+        console.log("🚀 Enviando a ProductsService.getAllProducts...");
+        
+
+        // Obtener productos desde el servicio
         const products = await ProductsService.getAllProducts(
             Number(page), 
             Number(limit), 
-            mainCategoryId, 
-            subCategoryId,
-            searchQuery 
+            mainCategoryId || null,
+            subCategoryId || null,
+            searchQuery || "",
+            minPrice || null,
+            maxPrice || null
         );
 
+        console.log("📤 Respuesta de ProductsService:");
+        console.log({
+            count: products?.products?.length || 0,
+            total: products?.total,
+        });
+
+        console.log("──────────────────────────────────────────");
+
+        // Respuesta cuando no hay productos
         if (!products || products.products.length === 0) {
-            return res.status(404).json({ message: "No se encontraron productos con estos criterios" });
+            return res.status(200).json({ 
+                products: [], 
+                total: 0, 
+                page: Number(page), 
+                limit: Number(limit) 
+            });
         }
 
+        // Respuesta normal
         res.status(200).json(products);
+
     } catch (error) {
-        console.error("❌ Error detallado al obtener productos:", error);
+
+        console.error("❌ Error detallado al obtener productos:");
+        console.error(error);
 
         next({
             message: error.message || "Ocurrió un error al obtener productos",
@@ -41,10 +79,8 @@ async getAllProducts(req, res, next) {
             stack: error.stack,
         });
     }
-},
-
-
-
+}
+,
 
 
 async searchProducts(req, res, next) {

@@ -1,6 +1,8 @@
 import { ProductsService } from "../services/productsService.js";
 
 export const ProductsController = {
+
+  
   async getAllProducts(req, res, next) {
     try {
       const { page = 1, limit = 10 } = req.query;
@@ -22,6 +24,12 @@ export const ProductsController = {
       });
     }
   },
+
+
+
+
+
+  //////
 
   async getProductById(req, res, next) {
     try {

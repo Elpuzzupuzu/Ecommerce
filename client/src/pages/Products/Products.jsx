@@ -2,16 +2,13 @@
 
 import React, { useRef } from "react";
 import { useProductsLogic } from "./hooks/useProductsLogic";
-import ProductsHeader from "./components/ProductsHeader";
 import ProductsToolbar from "./components/ProductsToolbar";
 import ProductsGrid from "./components/ProductsGrid";
 import ProductsPagination from "./components/ProductsPagination";
 import NoResults from "./components/NoResult";
 import FilterSidebar from "./ProductFilter/ProductFilter";
-import HeroSlider from "../../components/BannerSlider/HeroSlider";
-import heroImage from '../../../src/assets/images/pipes.jpg'
+import heroImage from "../../../src/assets/images/pipes.jpg";
 import HeroSection from "../../components/HeroSection/HeroSection";
-
 
 const ProductsPage = ({ addToCart }) => {
   const logic = useProductsLogic();
@@ -19,7 +16,6 @@ const ProductsPage = ({ addToCart }) => {
     loading,
     error,
     currentProducts,
-    sortedProducts,
     totalPages,
     currentPage,
     setCurrentPage,
@@ -39,21 +35,30 @@ const ProductsPage = ({ addToCart }) => {
     getFilterCount,
   } = logic;
 
-  // Ref para la barra de filtros
+  // Asegura que nunca sea undefined
+  const safeProducts = Array.isArray(currentProducts) ? currentProducts : [];
+
   const toolbarRef = useRef(null);
 
-  if (loading) return <div className="flex justify-center p-20">Cargando...</div>;
-  if (error) return <div className="text-center text-red-600 p-20">Error: {error}</div>;
+  if (loading)
+    return <div className="flex justify-center p-20">Cargando...</div>;
+
+  if (error) {
+    const errorMessage =
+      typeof error === "string" ? error : error.message || "Error desconocido";
+    return (
+      <div className="text-center text-red-600 p-20">
+        Error: {errorMessage}
+      </div>
+    );
+  }
 
   return (
-    // Se agregó 'overflow-x-hidden' para recortar cualquier contenido
-    // que se desborde horizontalmente y evitar el scroll lateral.
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-100 overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* <ProductsHeader /> */}
-      
+
         <ProductsToolbar
-          ref={toolbarRef} 
+          ref={toolbarRef}
           {...{
             searchTerm,
             setSearchTerm,
@@ -69,13 +74,14 @@ const ProductsPage = ({ addToCart }) => {
           }}
         />
 
-        {currentProducts.length > 0 ? (
+        {safeProducts.length > 0 ? (
           <>
             <ProductsGrid
-              products={currentProducts}
+              products={safeProducts}
               viewMode={viewMode}
               addToCart={addToCart}
             />
+
             <ProductsPagination
               totalPages={totalPages}
               currentPage={currentPage}
@@ -84,7 +90,10 @@ const ProductsPage = ({ addToCart }) => {
             />
           </>
         ) : (
-          <NoResults />
+          <NoResults
+            message="No hay productos que coincidan con tu búsqueda."
+            onClearFilters={() => setFilters({})}
+          />
         )}
       </div>
 
@@ -95,10 +104,8 @@ const ProductsPage = ({ addToCart }) => {
         onToggle={() => setSidebarOpen(false)}
         categories={availableCategories}
       />
-          {/* <HeroSlider/> */}  
-      <HeroSection heroImage={heroImage} />
-          
 
+      <HeroSection heroImage={heroImage} />
     </div>
   );
 };

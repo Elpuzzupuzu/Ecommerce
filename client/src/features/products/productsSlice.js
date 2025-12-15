@@ -6,7 +6,7 @@ import api from "../../api/axios";
 // ===============================
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  // 🚀 AJUSTADO: Acepta un objeto de parámetros que puede incluir:
+  //  AJUSTADO: Acepta un objeto de parámetros que puede incluir:
   // page, limit, mainCategoryId, subCategoryId, searchQuery, etc.
   async (queryParams = {}, thunkAPI) => {
     // Definimos valores por defecto y combinamos con los queryParams recibidos
@@ -46,6 +46,10 @@ export const fetchProducts = createAsyncThunk(
     }
   }
 );
+
+
+
+
 
 // ===============================
 // Buscar productos (Se mantiene, pero su funcionalidad es redundante)
@@ -102,41 +106,7 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
-// ===============================
-// Agregar nuevo producto (Sin cambios)
-// ===============================
-// export const addProduct = createAsyncThunk(
-//   "products/addProduct",
-//   async ({ data, file }, thunkAPI) => {
-//     try {
-//       const formData = new FormData();
 
-//       // Añadimos los campos del producto
-//       Object.keys(data).forEach(key => {
-//         if (data[key] !== undefined && data[key] !== null) {
-//           formData.append(key, data[key]);
-//         }
-//       });
-
-//       // Añadimos archivo si existe
-//       if (file) {
-//         formData.append("imagen", file);
-//       }
-
-//       const response = await api.post("/products", formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
-
-//       return response.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(
-//         error.response?.data || "Error al agregar producto"
-//       );
-//     }
-//   }
-// );
 
 export const addProduct = createAsyncThunk(
   "products/addProduct",
@@ -157,7 +127,7 @@ export const addProduct = createAsyncThunk(
         stock: "existencias",                   // Nuevo
         available: "disponible",                // Nuevo
         annualSales: "ventas_anuales",          // Nuevo
-        // El campo 'image' se maneja por separado con 'file'
+        
       };
 
       // Recorremos los datos del formulario (data)
@@ -365,8 +335,8 @@ const productsSlice = createSlice({
         // AJUSTE: La respuesta del backend ya trae 'products' y 'total'.
         state.items = action.payload.products;
         state.total = action.payload.total;
-        state.page = action.payload.page;
-        state.limit = action.payload.limit || state.limit;
+        // state.page = action.payload.page;
+        // state.limit = action.payload.limit || state.limit;
         
         // Cuando fetchProducts es exitoso, asumimos que estamos en el flujo principal.
         // Opcional: limpiar los resultados obsoletos de las búsquedas separadas.

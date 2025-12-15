@@ -2,16 +2,20 @@ import { ProductsRepository } from "../repositories/productsRepository.js";
 
 export const ProductsService = {
 
+  ////productos paginados 
 async getAllProducts(page = 1, limit = 10, mainCategoryId, subCategoryId, searchQuery) {
     const { products, total } = await ProductsRepository.getProductsPaginated(
         page, 
         limit, 
         mainCategoryId, 
         subCategoryId,
-        searchQuery // 👈 Se pasa al Repositorio
+        searchQuery // 
     );
     return { products, total };
 },
+
+
+
 
 // find by id
   async getProductById(id) {
