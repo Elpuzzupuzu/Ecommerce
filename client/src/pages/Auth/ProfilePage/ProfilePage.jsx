@@ -73,12 +73,6 @@ export default function ProfilePage() {
             dispatch(fetchUserWishlist(reduxUser.id));
         }
         
-        // Carga de Reseñas: 
-        // Ya NO es necesaria aquí, UserReviewsList se encarga internamente
-        // if (activeTab === "reviews") {
-        //     dispatch(fetchUserReviews(reduxUser.id)); 
-        // }
-        
     }, [activeTab, dispatch, reduxUser?.id]);
 
 

@@ -1,181 +1,186 @@
-import React, { useEffect, useState } from "react";
-import { User, Camera } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { updateUserProfile } from "../../../../features/user/usersSlice";
-import api from "../../../../api/axios";
+// AccountInfo.jsx
+import React from "react";
+import { User, Camera, Mail, Phone, MapPin, Save } from "lucide-react";
+import useAccountInfoLogic from "../hooks/useAccountInfoLogic";
 
 const AccountInfo = ({ user }) => {
-  const dispatch = useDispatch();
+  const {
+    formData,
+    previewImage,
+    saving,
+    error,
+    handleChange,
+    handleImageChange,
+    handleSave,
+  } = useAccountInfoLogic(user);
 
-  const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    phone: "",
-    location: "",
-    foto_perfil: "", // URL REAL (backend)
-  });
-
-  const [file, setFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-
-  // ===============================
-  // Cargar datos iniciales
-  // ===============================
-  useEffect(() => {
-    if (!user) return;
-
-    setFormData({
-      nombre: user.nombre || "",
-      apellido: user.apellido || "",
-      phone: user.phone || "",
-      location: user.location || "",
-      foto_perfil: user.foto_perfil || "",
-    });
-
-    setPreviewImage(user.foto_perfil || "");
-    setFile(null);
-  }, [user]);
-
-  // ===============================
-  // Handlers
-  // ===============================
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    const selected = e.target.files?.[0];
-    if (!selected) return;
-
-    setFile(selected);
-    setPreviewImage(URL.createObjectURL(selected));
-  };
-
-  // ===============================
-  // Guardar perfil
-  // ===============================
-  const handleSave = async () => {
-    setSaving(true);
-    setError(null);
-
-    try {
-      let fotoPerfilUrl = formData.foto_perfil;
-
-      // 1️⃣ Subir imagen solo si cambió
-      if (file) {
-        const imageForm = new FormData();
-        imageForm.append("imagen", file);
-
-        const response = await api.post(
-          "/products/upload-image",
-          imageForm
-        );
-
-        fotoPerfilUrl = response.data.imageUrl;
-      }
-
-      // 2️⃣ Payload FINAL (slice lo procesa)
-      const payload = {
-        ...formData,
-        foto_perfil: fotoPerfilUrl,
-      };
-
-      // 3️⃣ Dispatch simple
-      await dispatch(updateUserProfile(payload)).unwrap();
-    } catch (err) {
-      console.error("❌ Error al actualizar perfil:", err);
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          "Error al actualizar perfil"
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // ===============================
-  // Render
-  // ===============================
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="relative">
-          {previewImage ? (
-            <img
-              src={previewImage}
-              alt="Avatar"
-              className="w-12 h-12 rounded-xl object-cover"
-            />
-          ) : (
-            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
-            </div>
-          )}
-
-          <label className="absolute -bottom-1 -right-1 bg-blue-500 p-1 rounded-full cursor-pointer">
-            <Camera className="w-3 h-3 text-white" />
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleImageChange}
-            />
-          </label>
-        </div>
-
-        <h2 className="text-xl font-semibold text-gray-900">
-          Informacion de la cuenta
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+        <h2 className="text-2xl font-semibold text-white">
+          Información de la cuenta
         </h2>
+        <p className="text-blue-100 text-sm mt-1">
+          Gestiona tu información personal y preferencias
+        </p>
       </div>
 
-      <div className="space-y-4">
-        <input
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
-          placeholder="Nombre"
-          className="w-full border rounded-lg px-3 py-2"
-        />
+      {/* Content */}
+      <div className="px-8 py-6">
+        {/* Avatar Section */}
+        <div className="flex items-center gap-6 mb-8 pb-6 border-b border-gray-100">
+          <div className="relative group">
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt="Avatar"
+                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg ring-2 ring-gray-100"
+              />
+            ) : (
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg ring-2 ring-gray-100">
+                <User className="w-10 h-10 text-white" />
+              </div>
+            )}
 
-        <input
-          name="apellido"
-          value={formData.apellido}
-          onChange={handleChange}
-          placeholder="Apellido"
-          className="w-full border rounded-lg px-3 py-2"
-        />
+            <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 p-2.5 rounded-full cursor-pointer shadow-lg transition-all duration-200 hover:scale-110">
+              <Camera className="w-4 h-4 text-white" />
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
 
-        <p className="text-gray-500">{user?.correo}</p>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Foto de perfil
+            </h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Formatos: JPG, PNG. Tamaño máximo: 5MB
+            </p>
+          </div>
+        </div>
 
-        <input
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="Teléfono"
-          className="w-full border rounded-lg px-3 py-2"
-        />
+        {/* Form Fields */}
+        <div className="space-y-5">
+          {/* Nombre y Apellido */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre
+              </label>
+              <input
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                placeholder="Ingresa tu nombre"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
 
-        <input
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          placeholder="Ubicación"
-          className="w-full border rounded-lg px-3 py-2"
-        />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Apellido
+              </label>
+              <input
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleChange}
+                placeholder="Ingresa tu apellido"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+          {/* Correo */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Correo electrónico
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                value={user?.correo || ""}
+                readOnly
+                className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-2.5 text-gray-500 bg-gray-50 cursor-not-allowed"
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-1.5">
+              El correo no puede ser modificado
+            </p>
+          </div>
 
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50"
-        >
-          {saving ? "Saving..." : "Save changes"}
-        </button>
+          {/* Teléfono */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Teléfono
+            </label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Ej: +52 999 123 4567"
+                className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Ubicación */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Ubicación
+            </label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="Ej: Mérida, Yucatán"
+                className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
+          <button
+            type="button"
+            className="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-sm hover:shadow"
+          >
+            {saving ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Guardando...</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                <span>Guardar cambios</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
