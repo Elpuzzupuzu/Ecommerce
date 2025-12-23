@@ -91,18 +91,30 @@ async getProductsPaginated(page = 1, limit = 10, mainCategoryId, subCategoryId, 
 
 //// Search Products 
 
+// async searchProducts(query) {
+//   const { data, error } = await supabase
+//     .from("productos")
+//     .select("*")
+//     .ilike("nombre", `%${query}%`)
+//     .order("nombre", { ascending: true });
+
+//   if (error) throw new Error(error.message);
+//   return { products: data || [] };
+// } ///<---------------------------->>
+// ,
 async searchProducts(query) {
   const { data, error } = await supabase
     .from("productos")
     .select("*")
-    .ilike("nombre", `%${query}%`)
+    .or(
+      `nombre.ilike.%${query}%,codigo.ilike.%${query}%`
+    )
     .order("nombre", { ascending: true });
 
   if (error) throw new Error(error.message);
   return { products: data || [] };
-} ///<---------------------------->>
+}
 ,
-
 /// Search By Filter
 
 

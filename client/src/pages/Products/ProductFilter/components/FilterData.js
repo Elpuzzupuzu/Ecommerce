@@ -3,12 +3,13 @@
 
 
     export const categories = [
-        { name: 'Ferreteria', id: '2ded7b39-d779-476d-93fb-3f83fe981b4e', icon: Droplets },
-        { name: 'Industriales', id: '381dd166-bbc5-43ac-96d1-96116fe4f355', icon: Link },
-        { name: 'Domesticos', id: 'b05d6896-6aee-4461-9385-b46d32ec7c0a', icon: CircleDot },
-        { name: 'Piscinas', id: 'c33a2429-2647-43b7-aa52-c307b38f2274', icon: Filter },
-      ];
-
+    { name: 'Ferreteria', id: '901defa3-f792-4270-9f37-ad3f7519a88a', icon: Droplets }, // Mapeado de 'FERRETERIA'
+    { name: 'Industriales', id: '8cdc61a1-7a03-4ff5-aeb3-24632c19e2a0', icon: Link }, // Mapeado de 'INDUSTRIAL'
+    { name: 'Domesticos', id: '008b1db3-8bea-42ae-8555-ea59f86f31f3', icon: CircleDot }, // Mapeado de 'DOMESTICO'
+    { name: 'Piscinas', id: 'b6c9bb33-f1f8-4b66-8392-4038342d99b4', icon: Filter }, // Mapeado de 'PISCINAS'
+    // Añadido por si lo necesitas:
+    { name: 'Servicio', id: '1cac0f67-8a05-4bd4-bfcd-3db09409a672', icon: Filter }, // Mapeado de 'SERVICIO' (Se puede cambiar el icono si es necesario)
+];
   // Subcategorías
     export const subcategories = [
       { name: 'SI', id: 'bfc4fc27-d4b0-4d59-822f-4f646337789b' },
