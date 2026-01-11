@@ -13,7 +13,7 @@ export const SubCategorySelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
 
-  // ⬅️ Muy importante: cargar solo subcategorías de la categoría seleccionada
+  //  Muy importante: cargar solo subcategorías de la categoría seleccionada
   const { subcategories, loading } = useSubCategories(parentCategoryId);
 
   const disabled = !parentCategoryId || loading;

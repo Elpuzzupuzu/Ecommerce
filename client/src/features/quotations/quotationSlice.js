@@ -19,6 +19,25 @@ export const createQuotation = createAsyncThunk(
     }
 );
 
+/**
+ * Thunk para generar una cotización de venta directa por un administrador/vendedor.
+ * @param {object} payload - Debe contener { itemsVenta, datosCliente }
+ */
+export const createDirectQuotation = createAsyncThunk(
+    "quotation/createDirectQuotation",
+    async (payload, thunkAPI) => {
+        try {
+            // El payload es { itemsVenta, datosCliente }
+            const response = await api.post('/quotations/directa', payload);
+            return response.data.cotizacion; 
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data || "Error al generar la cotización directa"
+            );
+        }
+    }
+);
+
 export const fetchQuotations = createAsyncThunk(
     "quotation/fetchQuotations",
     async (params = {}, thunkAPI) => {
@@ -164,6 +183,18 @@ const quotationSlice = createSlice({
             .addCase(createQuotation.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            }).addCase(createDirectQuotation.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(createDirectQuotation.fulfilled, (state, action) => {
+                state.loading = false;
+                // Usa el mismo reducer para añadir la cotización a la lista
+                quotationSlice.caseReducers.quotationAdded(state, action); 
+            })
+            .addCase(createDirectQuotation.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             })
 
             // --- fetchQuotations ---
@@ -262,5 +293,7 @@ export const {
     quotationUpdated,
     quotationRemoved,
 } = quotationSlice.actions;
+
+
 
 export default quotationSlice.reducer;

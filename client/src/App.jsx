@@ -23,7 +23,7 @@ function App() {
   // === Lógica Central ===
   const { isAuthenticated, user, reduxAuthChecked } = useAppInitialization();
 
-  // 1. GESTIONAR LA CONEXIÓN GLOBAL DEL SOCKET (NUEVO PASO)
+  // 1. GESTIONAR LA CONEXIÓN GLOBAL DEL SOCKET (
   // Se conecta solo si el usuario está autenticado.
   const socketInstance = useSocketManager(isAuthenticated); 
 
