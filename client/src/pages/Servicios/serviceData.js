@@ -1,7 +1,7 @@
-import { 
-  Wrench, Sprout, Leaf, Sun, Droplet, 
-  Users, Handshake, CheckCircle, Award, Clock 
-} from "lucide-react";
+// import { 
+//   Wrench, Sprout, Leaf, Sun, Droplet, 
+//   Users, Handshake, CheckCircle, Award, Clock 
+// } from "lucide-react";
 
 import riegoImg from '../../assets/serviceimages/riego.jpg';
 import sensorImg from '../../assets/serviceimages/sensore.jpg';
@@ -24,84 +24,155 @@ import cis3 from '../../assets/serviceimages/cisterna3.jpg';
 
 
 
+import { 
+  ShoppingCart, Tv, Gamepad2, Music, Coffee, 
+  Users, CheckCircle, Award, Clock 
+} from "lucide-react";
+
 export const services = [
   { 
-    id: "sistemas-riego",
-    icon: Droplet, 
-    title: 'Sistemas de Riego Residencial', 
-    description: 'Diseño e instalación de sistemas de riego automáticos que optimizan el consumo de agua, garantizando jardines y áreas verdes saludables.',
+    id: "streaming",
+    icon: Tv, 
+    title: "Streaming & Entretenimiento", 
+    description: "Accede a las plataformas de streaming más populares con disponibilidad inmediata.",
     items: [
-      { name: 'Riego automatizado', details: 'Control inteligente y programable por zonas para eficiencia máxima.', image: riegoImg },
-      { name: 'Sensores de humedad', details: 'Ajustes en tiempo real para evitar desperdicio de agua.', image: sensorImg },
-      { name: 'Ahorro hasta 40% de agua', details: 'Optimización de recursos sin comprometer la salud de tus plantas.', image: ahorroagua }
+      {
+        name: "Netflix",
+        details: "Series y películas ilimitadas en todos tus dispositivos.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+      },
+      {
+        name: "Disney+",
+        details: "Contenido exclusivo de Disney, Marvel, Star Wars y Pixar.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"
+      },
+      {
+        name: "Prime Video",
+        details: "Películas, series y beneficios exclusivos con Amazon Prime.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png"
+      }
     ],
-    color: 'from-blue-600 to-cyan-500'
+    color: "from-blue-600 to-indigo-500"
   },
   { 
-    id: "equipos-piscinas",
-    icon: Sun, 
-    title: 'Equipos para Piscinas', 
-    description: 'Proveemos soluciones completas para mantener tu piscina en perfectas condiciones durante todo el año.',
+    id: "gaming",
+    icon: Gamepad2, 
+    title: "Gaming & Consolas", 
+    description: "Productos y membresías oficiales para llevar tu experiencia gamer al siguiente nivel.",
     items: [
-      { name: 'Bombas eficientes', details: 'Máximo rendimiento con bajo consumo energético.', image: alberca1 },
-      { name: 'Filtros premium', details: 'Agua cristalina y libre de impurezas constantemente.', image: alberca2 },
-      { name: 'Limpieza automática', details: 'Sistemas inteligentes que mantienen la piscina limpia sin esfuerzo.', image: alberca3 }
+      {
+        name: "Xbox Game Pass",
+        details: "Acceso a cientos de juegos para consola y PC.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Xbox_Game_Pass_logo.svg"
+      },
+      {
+        name: "PlayStation Plus",
+        details: "Juegos mensuales, multijugador online y descuentos exclusivos.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/0/04/PlayStation_Plus_logo.svg"
+      },
+      {
+        name: "Nintendo Switch Online",
+        details: "Juega en línea y accede a clásicos de Nintendo.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/3/38/Nintendo_Switch_Online_logo.svg"
+      }
     ],
-    color: 'from-orange-500 to-yellow-500'
+    color: "from-green-600 to-emerald-500"
   },
   { 
-    id: "plomeria-reparaciones",
-    icon: Wrench, 
-    title: 'Plomería y Reparaciones', 
-    description: 'Servicios profesionales para cualquier problema hidráulico, garantizando funcionamiento seguro y confiable.',
+    id: "musica",
+    icon: Music, 
+    title: "Música & Audio", 
+    description: "Disfruta de música sin límites con las plataformas más reconocidas.",
     items: [
-      { name: 'Detección de fugas', details: 'Localización precisa para reparación rápida y eficaz.', image: pipe1 },
-      { name: 'Reparaciones', details: 'Atención inmediata para emergencias en cualquier momento.', image: pipe2 },
-      { name: 'Garantía extendida', details: 'Confianza total en cada servicio realizado.', image: pipe3 }
+      {
+        name: "Spotify Premium",
+        details: "Música sin anuncios y descargas offline.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg"
+      },
+      {
+        name: "Apple Music",
+        details: "Millones de canciones con calidad de audio superior.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Apple_Music_Logo.svg"
+      },
+      {
+        name: "YouTube Music",
+        details: "Música, mixes y videoclips sin interrupciones.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/d/d8/YouTube_Music_logo.svg"
+      }
     ],
-    color: 'from-gray-600 to-slate-500'
+    color: "from-red-500 to-pink-500"
   },
   { 
-    id: "mantenimiento-preventivo",
-    icon: Handshake, 
-    title: 'Mantenimiento Preventivo', 
-    description: 'Planes adaptados a tus necesidades para prolongar la vida útil de tus equipos y sistemas.',
+    id: "gift-cards",
+    icon: ShoppingCart, 
+    title: "Tarjetas de Regalo", 
+    description: "Créditos digitales para comprar lo que quieras, cuando quieras.",
     items: [
-      { name: 'Planes personalizados', details: 'Diseñados según el tipo y uso de tus instalaciones.', image: plan },
-      { name: 'Revisiones periódicas', details: 'Detección temprana de fallas antes de convertirse en problemas.', image: rev },
-      { name: 'Vida útil extendida', details: 'Mayor durabilidad y funcionamiento óptimo de tus sistemas.', image: vu }
+      {
+        name: "Amazon Gift Card",
+        details: "Compra millones de productos en Amazon.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+      },
+      {
+        name: "Google Play Gift Card",
+        details: "Apps, juegos, películas y más.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+      },
+      {
+        name: "Apple Gift Card",
+        details: "Todo el ecosistema Apple en una sola tarjeta.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+      }
     ],
-    color: 'from-green-600 to-emerald-500'
+    color: "from-gray-700 to-slate-500"
   },
   { 
-    id: "diseno-de-riego",
-    icon: Sprout, 
-    title: 'Riego para jardines', 
-    description: 'Transformamos tu espacio exterior en un entorno estético, funcional y sostenible.',
+    id: "food-brands",
+    icon: Coffee, 
+    title: "Comida & Bebidas", 
+    description: "Marcas reconocidas para disfrutar en cualquier momento.",
     items: [
-      { name: 'Diseño personalizado', details: 'Jardines únicos adaptados a tu estilo y espacio.', image: asp1 },
-      { name: 'Riego', details: 'sistemas de riego.', image: asp2 },
-      { name: 'Sostenible', details: 'Prácticas ecológicas que promueven la conservación del medio ambiente.', image: asp3 }
+      {
+        name: "Starbucks",
+        details: "Bebidas y café premium.",
+        image: "https://upload.wikimedia.org/wikipedia/sco/d/d3/Starbucks_Corporation_Logo_2011.svg"
+      },
+      {
+        name: "Uber Eats",
+        details: "Entrega de comida de tus restaurantes favoritos.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_Eats_2020_logo.svg"
+      },
+      {
+        name: "Rappi",
+        details: "Pedidos rápidos de comida, supermercado y más.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Rappi_logo.svg"
+      }
     ],
-    color: 'from-green-500 to-teal-400'
-  },
-  { 
-    id: "cisternas-tinacos",
-    icon: Leaf, 
-    title: 'Cisternas y Tinacos', 
-    description: 'Instalación y sanitización de tanques de agua asegurando calidad y seguridad en el suministro.',
-    items: [
-      { name: 'Instalación segura', details: 'Montaje profesional para evitar fugas y problemas.', image: cis3 },
-      { name: 'Sanitización completa', details: 'Limpieza profunda certificada para agua potable.', image: cis1 },
-      { name: 'Agua limpia', details: 'Garantía de suministro confiable y saludable para tu familia.', image: cis2 }
-    ],
-    color: 'from-teal-600 to-cyan-500'
+    color: "from-orange-500 to-yellow-500"
   }
 ];
 
+
 export const whyChooseUs = [
-  { icon: Award, title: "10 Años de Experiencia", description: "Más de una década perfeccionando nuestros servicios con innovación y calidad." },
-  { icon: Users, title: "Satisfacción al cliente", description: "Una comunidad creciente que confía en nuestro compromiso y profesionalismo." },
-  { icon: Clock, title: "Servicio eficiente", description: "Disponibles cuando más nos necesitas, atención rápida y confiable." },
-  { icon: CheckCircle, title: "Garantía", description: "Respaldamos cada trabajo para ofrecer seguridad y confianza a nuestros clientes." }
+  {
+    icon: Award,
+    title: "Marcas Oficiales",
+    description: "Trabajamos únicamente con proveedores y marcas 100% originales."
+  },
+  {
+    icon: Users,
+    title: "Miles de clientes",
+    description: "Usuarios satisfechos comprando productos digitales cada día."
+  },
+  {
+    icon: Clock,
+    title: "Entrega inmediata",
+    description: "Acceso instantáneo tras completar tu compra."
+  },
+  {
+    icon: CheckCircle,
+    title: "Compra segura",
+    description: "Pagos protegidos y soporte confiable."
+  }
 ];
+

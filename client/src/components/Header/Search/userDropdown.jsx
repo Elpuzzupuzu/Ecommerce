@@ -1,6 +1,14 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { LogIn, User, Power, List, Truck, UserPlus, FileText } from "lucide-react";
+import {
+  LogIn,
+  User,
+  Power,
+  List,
+  Truck,
+  UserPlus,
+  FileText,
+} from "lucide-react";
 
 const getInitials = (name) => {
   if (!name) return "??";
@@ -46,24 +54,23 @@ const UserDropdown = ({
             <img
               src={profilePicture}
               alt={`${userName}'s profile`}
-              className="w-8 h-8 rounded-full object-cover border-2 border-white shadow-md"
+              className="w-8 h-8 rounded-full object-cover border-2 border-slate-300 shadow-sm"
               onError={(e) => {
-                console.error("Error cargando imagen de perfil:", profilePicture);
                 e.target.style.display = "none";
               }}
             />
           ) : (
-            <div className="w-8 h-8 flex items-center justify-center bg-white text-[#131921] font-bold text-sm rounded-full shadow-inner">
+            <div className="w-8 h-8 flex items-center justify-center bg-slate-200 text-slate-800 font-bold text-sm rounded-full shadow-inner">
               {userInitials}
             </div>
           )}
         </>
       )}
       <div className="flex flex-col leading-none">
-        <span className="text-xs text-white/70">
+        <span className="text-xs text-slate-500">
           Hola, {isLoggedIn ? userName.split(" ")[0] : "visitante"}
         </span>
-        <span className="text-sm font-bold text-white whitespace-nowrap">
+        <span className="text-sm font-semibold text-slate-900 whitespace-nowrap">
           {isLoggedIn ? "Tu Cuenta" : "Identifícate"}
         </span>
       </div>
@@ -72,15 +79,15 @@ const UserDropdown = ({
 
   return (
     <div
-      className="relative flex items-center h-full group transition-all"
+      className="relative flex items-center h-full"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div
         className={`p-2 rounded-md transition-all cursor-pointer ${
           isOpen
-            ? "bg-white/20 border-white/20"
-            : "border border-transparent hover:border-white/20"
+            ? "bg-slate-100 border border-slate-300"
+            : "border border-transparent hover:border-slate-300 hover:bg-slate-50"
         }`}
       >
         <TriggerContent />
@@ -88,27 +95,23 @@ const UserDropdown = ({
 
       {isOpen && (
         <div
-          className={`absolute top-[calc(100%-5px)] right-0 bg-white shadow-2xl border border-gray-100 p-4 z-40 transform origin-top-right ${
+          className={`absolute top-[calc(100%-5px)] right-0 bg-white shadow-xl border border-slate-200 p-4 z-40 transform origin-top-right ${
             isLoggedIn ? "w-[450px] rounded-xl" : "w-[400px] rounded-lg"
           }`}
         >
-          {/* Flecha decorativa del dropdown */}
-          <div
-            className={`absolute -top-3 right-6 w-4 h-4 bg-white transform rotate-45 border-t border-l ${
-              isLoggedIn ? "border-gray-100 right-8" : "border-gray-200 right-4"
-            }`}
-          ></div>
+          {/* Flecha */}
+          <div className="absolute -top-3 right-6 w-4 h-4 bg-white transform rotate-45 border-t border-l border-slate-200"></div>
 
           {!isLoggedIn ? (
             <div className="flex flex-col items-center p-2">
-              <p className="text-sm text-gray-700 mb-3">
+              <p className="text-sm text-slate-600 mb-3">
                 Accede o regístrate para una mejor experiencia.
               </p>
 
               <Link
                 to="/login"
                 onClick={handleLinkClick}
-                className="w-full text-center bg-[#f08804] hover:bg-[#eb9a27] text-[#131921] font-bold py-2 rounded-md transition-colors shadow-md flex items-center justify-center gap-2"
+                className="w-full text-center bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 rounded-md transition-colors shadow-sm flex items-center justify-center gap-2"
               >
                 <LogIn size={20} /> Iniciar Sesión
               </Link>
@@ -116,19 +119,20 @@ const UserDropdown = ({
               <Link
                 to="/register"
                 onClick={handleLinkClick}
-                className="w-full text-center mt-2 text-sm text-[#1C2E82] hover:text-[#2d4bc7] flex items-center justify-center gap-1"
+                className="w-full text-center mt-2 text-sm text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1"
               >
                 <UserPlus size={16} /> Crear una cuenta
               </Link>
             </div>
           ) : (
             <>
-              <h3 className="text-lg font-extrabold text-[#131921] mb-4 border-b pb-2">
+              <h3 className="text-lg font-extrabold text-slate-900 mb-4 border-b border-slate-200 pb-2">
                 ¡Bienvenido, {userName.split(" ")[0]}!
               </h3>
+
               <div className="flex justify-between gap-8">
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wider">
+                  <h4 className="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">
                     Tu Cuenta
                   </h4>
                   <ul className="space-y-2">
@@ -138,16 +142,20 @@ const UserDropdown = ({
                     <LinkItem to="/listas/crear" onClick={handleLinkClick} Icon={List}>
                       Mis Listas de Deseos
                     </LinkItem>
-                    <LinkItem to="/mi-cuenta/mis-facturas" onClick={handleLinkClick} Icon={FileText}>
+                    <LinkItem
+                      to="/mi-cuenta/mis-facturas"
+                      onClick={handleLinkClick}
+                      Icon={FileText}
+                    >
                       Mis Facturas
                     </LinkItem>
                   </ul>
                 </div>
 
-                <div className="w-px bg-gray-200"></div>
+                <div className="w-px bg-slate-200"></div>
 
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wider">
+                  <h4 className="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">
                     Pedidos y Acciones
                   </h4>
                   <ul className="space-y-2">
@@ -157,7 +165,7 @@ const UserDropdown = ({
                     <li className="text-sm">
                       <button
                         onClick={handleLogout}
-                        className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-3 py-1 w-full text-left font-medium hover:bg-red-50 rounded-md px-2 -mx-2"
+                        className="text-red-600 hover:text-red-700 transition-colors flex items-center gap-3 py-1 w-full text-left font-medium hover:bg-red-50 rounded-md px-2 -mx-2"
                       >
                         <Power size={18} className="text-red-500" />
                         Cerrar Sesión
@@ -179,11 +187,11 @@ const LinkItem = ({ to, onClick, Icon, children }) => (
     <Link
       to={to}
       onClick={onClick}
-      className="text-gray-700 hover:text-[#f08804] transition-colors flex items-center gap-3 py-1 font-medium hover:bg-gray-100 rounded-md px-2 -mx-2"
+      className="text-slate-700 hover:text-pink-600 transition-colors flex items-center gap-3 py-1 font-medium hover:bg-slate-100 rounded-md px-2 -mx-2"
     >
       <Icon
         size={18}
-        className="text-gray-500 group-hover:text-[#f08804] transition-colors"
+        className="text-slate-400 group-hover:text-pink-500 transition-colors"
       />
       {children}
     </Link>

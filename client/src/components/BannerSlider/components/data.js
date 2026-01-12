@@ -1,41 +1,41 @@
 // data.js
 import { Droplet, Gauge, Wrench } from "lucide-react";
-import pipes from "../../../assets/images/pipes.jpg";
-import pvc from  "../../../assets/images/pvc.jpg";
-import bomb from  "../../../assets/images/bombita.jpg";
+import pipes from "../../../assets/images/hero1.jpg";
+import pvc from  "../../../assets/images/hero2.jpg";
+import bomb from  "../../../assets/images/hero3.jpg";
 
 export const slidesData = [
   {
     id: 1,
     image: pipes,
-    category: "Sistemas de Flujo Premium",
-    title: "Válvulas y Bombas",
-    subtitle: "de Alto Rendimiento",
+    category: "Peluches Originales",
+    title: "Squishmallows",
+    subtitle: "Suaves y Adorables",
     description:
-      "Componentes hidráulicos de precisión para un control y caudal óptimos en cualquier aplicación.",
-    cta: "Ver Hidráulicos",
+      "Peluches ultra suaves y abrazables, perfectos para coleccionar, regalar o acompañarte todos los días.",
+    cta: "Ver Squishmallows",
     icon: Droplet,
   },
   {
     id: 2,
     image: pvc,
-    category: "Infraestructura Duradera",
-    title: "Tubería PVC y CPVC",
-    subtitle: "Industrial y Residencial",
+    category: "Colecciones Especiales",
+    title: "Ediciones Únicas",
+    subtitle: "y Personajes Favoritos",
     description:
-      "Soluciones resistentes a la corrosión, ideales para instalaciones de agua, drenaje y conducción de fluidos.",
-    cta: "Explorar Tubería",
+      "Descubre Squishmallows exclusivos, ediciones limitadas y tus personajes más queridos en diferentes tamaños.",
+    cta: "Explorar Colección",
     icon: Gauge,
   },
   {
     id: 3,
     image: bomb,
-    category: "Conexiones y Herramientas",
-    title: "Todo lo que Necesitas",
-    subtitle: "para tu Instalación",
+    category: "Regalos Perfectos",
+    title: "El Detalle Ideal",
+    subtitle: "para Cada Ocasión",
     description:
-      "Bridas, codos, adaptadores y herramientas profesionales para garantizar un sellado perfecto y seguro.",
-    cta: "Comprar Conexiones",
+      "El regalo perfecto para niños, coleccionistas y amantes de los peluches. Amor, ternura y diversión garantizados.",
+    cta: "Comprar Ahora",
     icon: Wrench,
   },
 ];

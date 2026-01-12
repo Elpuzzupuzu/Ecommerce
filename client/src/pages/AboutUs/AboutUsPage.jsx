@@ -84,10 +84,10 @@ const AboutUsPage = () => {
                 StarIcon={Star} 
             />
 
-            <FooterCTA 
+            {/* <FooterCTA 
                 getAnimationClass={getAnimationClass} 
                 ArrowRightIcon={ArrowRight} 
-            />
+            /> */}
         </main>
     );
 };

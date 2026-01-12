@@ -1,140 +1,156 @@
-import { 
-  Calendar, 
-  Users, 
-  Award, 
-  TrendingUp, 
-  Handshake, 
-  Droplet, 
-  Wrench, 
-  Spade, 
-  Home, 
-  CheckCircle, 
-  Star 
-} from 'lucide-react';
+import {
+  Calendar,
+  Users,
+  Award,
+  TrendingUp,
+  CheckCircle,
+  Star,
+  ShoppingCart,
+  Package,
+  Truck,
+  Store,
+  Home
+} from "lucide-react";
 
-import riego from '../../assets/images/imgs/riego.jpg'; 
-import riego2 from '../../assets/images/imgs/riego2.jpg'; 
-import epis from '../../assets/images/imgs/epis.jpg'; 
-import cocina from '../../assets/images/imgs/cocina.jpg'; 
-import indus from '../../assets/images/imgs/indus.jpg'; 
-import tinaco from '../../assets/images/imgs/tinaco.jpg'; 
+/* =========================
+   STATS (Confianza)
+========================= */
 
 export const stats = [
-  { icon: Calendar, number: '2015', key: 'years', label: 'Año de Fundación' },
-  { icon: Users, number: '500+', key: 'clients', label: 'Clientes Satisfechos' },
-  { icon: Award, number: '10', key: 'experience', label: 'Años de Experiencia' },
-  { icon: TrendingUp, number: '100%', key: 'satisfaction', label: 'Atención del Cliente' },
+  { icon: Calendar, number: "2015", key: "founded", label: "Plataforma fundada" },
+  { icon: Users, number: "1M+", key: "clients", label: "Clientes activos" },
+  { icon: Package, number: "10M+", key: "products", label: "Productos disponibles" },
+  { icon: TrendingUp, number: "99%", key: "satisfaction", label: "Órdenes entregadas a tiempo" },
 ];
 
+/* =========================
+   CATEGORÍAS DESTACADAS
+========================= */
+
 export const expertiseAreas = [
-  { 
-    icon: Droplet, 
-    title: 'Sistemas de Riego', 
-    description: 'Soluciones eficientes para optimizar el consumo de agua y el cuidado de tus jardines.',
-    features: ['Riego automatizado','Ahorro de agua'],
-    image: riego2
+  {
+    icon: ShoppingCart,
+    title: "Tecnología y Electrónica",
+    description: "Los últimos dispositivos, accesorios y gadgets al mejor precio.",
+    features: ["Smartphones", "Laptops", "Accesorios"],
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200"
   },
-  { 
-    icon: Handshake, 
-    title: 'Equipos para Piscinas', 
-    description: 'Diseño e instalación de sistemas de filtrado y bombas para piscinas residenciales.',
-    features: ['Filtros de alta calidad', 'Bombas eficientes', 'Mantenimiento'],
-    image: epis
+  {
+    icon: Home,
+    title: "Hogar y Cocina",
+    description: "Todo para equipar tu hogar con calidad y estilo.",
+    features: ["Electrodomésticos", "Decoración", "Cocina"],
+    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1200"
   },
-  { 
-    icon: Wrench, 
-    title: 'Instalaciones de Cocina', 
-    description: 'Especialistas en lavabos, tuberías y grifería de alta calidad para tu cocina.',
-    features: ['Grifería', 'Instalación experta', 'Garantía extendida'],
-    image: cocina
-  }, 
-  { 
-    icon: Spade, 
-    title: 'Tuberías y Plomería', 
-    description: 'Diagnóstico y reparación de fugas, así como la instalación completa de sistemas de tuberías.',
-    features: ['Detección de fugas', 'Materiales duraderos', 'Servicio a domicilio'],
-    image: riego
+  {
+    icon: Store,
+    title: "Moda y Accesorios",
+    description: "Ropa, calzado y accesorios para toda la familia.",
+    features: ["Hombre", "Mujer", "Niños"],
+    image: "https://images.unsplash.com/photo-1521334884684-d80222895322?w=1200"
   },
-  { 
-    icon: Home, 
-    title: 'Tinacos y Cisternas', 
-    description: 'Soluciones de almacenamiento de agua potable con instalaciones seguras y duraderas.',
-    features: ['Instalación segura', 'Materiales certificados', 'Mantenimiento preventivo'],
-    image: tinaco
+  {
+    icon: Package,
+    title: "Belleza y Cuidado Personal",
+    description: "Productos esenciales para tu rutina diaria.",
+    features: ["Cuidado facial", "Higiene", "Fragancias"],
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200"
   },
-  { 
-    icon: Home, 
-    title: 'Industriales', 
-    description: 'Soluciones de almacenamiento de agua potable con instalaciones seguras y duraderas.',
-    features: ['Instalación segura', 'Materiales certificados', 'Mantenimiento preventivo'],
-    image: indus
+  {
+    icon: Truck,
+    title: "Herramientas y DIY",
+    description: "Todo para proyectos, reparaciones y mejoras del hogar.",
+    features: ["Herramientas eléctricas", "Manualidades", "Jardín"],
+    image: "https://images.unsplash.com/photo-1581141849291-1125c7b692b5?w=1200"
+  },
+  {
+    icon: Star,
+    title: "Ofertas destacadas",
+    description: "Descuentos diarios en productos seleccionados.",
+    features: ["Ofertas flash", "Más vendidos", "Recomendados"],
+    image: "https://images.unsplash.com/photo-1607082349566-1870b0b41f38?w=1200"
   }
 ];
+
+/* =========================
+   TESTIMONIOS
+========================= */
 
 export const testimonials = [
   {
     name: "Ana Rodríguez",
-    role: "Gerente de Proyectos",
-    text: "El equipo de Flucsa superó mis expectativas. Su sistema de riego es impecable y su servicio al cliente, excepcional.",
+    role: "Compradora frecuente",
+    text: "Siempre encuentro lo que busco y los envíos llegan antes de lo esperado.",
     rating: 5,
     avatar: "A.R."
   },
   {
     name: "Juan Pérez",
-    role: "Dueño de Negocio",
-    text: "Los instaladores de tuberías fueron rápidos y profesionales. Un trabajo de calidad que se nota en cada detalle.",
+    role: "Vendedor asociado",
+    text: "La plataforma me permitió llegar a miles de clientes de forma sencilla.",
     rating: 5,
     avatar: "J.P."
   },
   {
     name: "María González",
-    role: "Arquitecta",
-    text: "Flucsa transformó completamente nuestro proyecto. Su expertise en sistemas hidráulicos es incomparable.",
+    role: "Cliente Prime",
+    text: "Excelente experiencia de compra, devoluciones fáciles y gran variedad.",
     rating: 5,
     avatar: "M.G."
   }
 ];
 
+/* =========================
+   HISTORIA / CRECIMIENTO
+========================= */
+
 export const historyItems = [
   {
     icon: Award,
-    title: "Nuestros Inicios (2015)",
-    description: "Fundada como un pequeño taller familiar con una gran visión: revolucionar la industria hidráulica con soluciones innovadoras y de máxima calidad.",
-    gradient: "from-[#1C2E82] to-[#2d4bc7]"
+    title: "El comienzo",
+    description:
+      "Iniciamos con una idea simple: hacer que comprar online fuera más fácil, rápido y accesible para todos.",
+    gradient: "from-[#FF9900] to-[#e88b00]"
   },
   {
     icon: TrendingUp,
-    title: "Nuestro Crecimiento",
-    description: "Evolucionamos constantemente, incorporando las últimas tecnologías sin perder de vista nuestros valores fundamentales: calidad, confiabilidad y excelencia.",
-    gradient: "from-[#ED0000] to-[#ff4444]"
+    title: "Expansión global",
+    description:
+      "Crecimos junto a millones de clientes y vendedores, ampliando categorías y mejorando la logística.",
+    gradient: "from-blue-600 to-blue-500"
   },
   {
     icon: Star,
-    title: "Nuestro Presente",
-    description: "Hoy somos un referente de excelencia en el mercado, manteniendo nuestro compromiso con la satisfacción del cliente y la innovación constante.",
+    title: "La plataforma hoy",
+    description:
+      "Hoy conectamos a personas con productos en todo el mundo, ofreciendo confianza y conveniencia.",
     gradient: "from-purple-600 to-pink-600"
   }
 ];
 
+/* =========================
+   VALORES
+========================= */
+
 export const values = [
   {
     icon: CheckCircle,
-    title: "Calidad",
-    description: "Utilizamos materiales de primera y tecnología de vanguardia"
+    title: "Confianza",
+    description: "Compras seguras y protección al cliente en cada pedido"
+  },
+  {
+    icon: Truck,
+    title: "Rapidez",
+    description: "Envíos eficientes con seguimiento en tiempo real"
   },
   {
     icon: Users,
-    title: "Confianza",
-    description: "10 años construyendo relaciones duraderas con nuestros clientes"
+    title: "Clientes primero",
+    description: "Experiencia pensada para millones de compradores"
   },
   {
     icon: TrendingUp,
     title: "Innovación",
-    description: "Siempre a la vanguardia en soluciones hidráulicas"
-  },
-  {
-    icon: Award,
-    title: "Excelencia",
-    description: "Comprometidos con superar las expectativas en cada proyecto"
+    description: "Mejoramos constantemente la experiencia de compra"
   }
 ];

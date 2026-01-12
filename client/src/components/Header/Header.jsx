@@ -33,15 +33,11 @@ const Header = ({ onCartToggle }) => {
 
   const handleLogout = () => dispatch(logoutUser());
 
-  /* ------------------------------------------------
-    ✅ FIX: Animación sin loop infinito
-  --------------------------------------------------*/
   useEffect(() => {
     setPreviousCartCount(prev => {
       if (totalCartItems > prev) {
         setIsCartAnimating(true);
         setShowAddedBadge(true);
-
         setTimeout(() => setIsCartAnimating(false), 600);
         setTimeout(() => setShowAddedBadge(false), 1500);
       }
@@ -49,50 +45,47 @@ const Header = ({ onCartToggle }) => {
     });
   }, [totalCartItems]);
 
-  /* --------------------------
-    Bloqueo de scroll en mobile
-  ---------------------------*/
   useEffect(() => {
-    if (isMenuOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'unset';
-
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [isMenuOpen]);
 
   return (
     <>
-      <header className="sticky top-0 bg-[#131921] shadow-lg z-50">
-        <div className="bg-gradient-to-r from-[#ff5fa2] via-[#e83e8c] to-[#b5176b]">
-          <div className="max-w-[1500px] mx-auto px-4 py-2 flex items-center gap-4">
+      <header className="sticky top-0 bg-white border-b border-slate-200 shadow-sm z-50">
+
+        {/* Top bar */}
+        <div className="bg-gradient-to-r from-white via-[#fff5fa] to-white">
+          <div className="max-w-[1500px] mx-auto px-4 py-3 flex items-center gap-4">
 
             {/* Logo */}
             <Link to="/" className="flex-shrink-0 group cursor-pointer">
-              <div>
-                <img
-                  src={LogoCompleto}
-                  alt="FLUCSA"
-                  className="h-12 w-auto object-contain transition-all duration-500 group-hover:brightness-125"
-                />
-              </div>
+              <img
+                src={LogoCompleto}
+                alt="MimitoShop"
+                className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </Link>
 
             {/* Ubicación */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-md hover:bg-white/10 transition-all cursor-pointer border border-transparent hover:border-white/20">
-              <MapPin className="w-5 h-5 text-white" />
+            <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-md hover:bg-slate-100 transition cursor-pointer border border-transparent hover:border-slate-300">
+              <MapPin className="w-5 h-5 text-pink-500" />
               <div className="flex flex-col">
-                <span className="text-xs text-white/70">Enviar a</span>
-                <span className="text-sm font-semibold text-white">Mérida, Yucatán</span>
+                <span className="text-xs text-slate-500">Enviar a</span>
+                <span className="text-sm font-semibold text-slate-900">
+                  Mérida, Yucatán
+                </span>
               </div>
             </div>
 
             {/* Search */}
             <div className="hidden md:flex flex-1 max-w-3xl">
-              <div className="w-full bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="w-full bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-slate-200">
                 <Search />
               </div>
             </div>
 
-            {/* Right Section */}
+            {/* Right section */}
             <div className="hidden lg:flex items-center gap-2">
 
               <UserDropdown
@@ -103,17 +96,17 @@ const Header = ({ onCartToggle }) => {
                 profilePicture={userProfile}
               />
 
-              <div className="px-3 py-2 rounded-md hover:bg-white/10 transition-all cursor-pointer border border-transparent hover:border-white/20">
+              <div className="px-3 py-2 rounded-md hover:bg-slate-100 transition cursor-pointer border border-transparent hover:border-slate-300">
                 <div className="flex flex-col">
-                  <span className="text-xs text-white/70">Mis</span>
-                  <span className="text-sm font-semibold text-white">Pedidos</span>
+                  <span className="text-xs text-slate-500">Mis</span>
+                  <span className="text-sm font-semibold text-slate-900">Pedidos</span>
                 </div>
               </div>
 
               {/* Cart */}
               <button
                 onClick={onCartToggle}
-                className={`relative group px-3 py-2 rounded-md hover:bg-white/10 transition-all border border-transparent flex items-center gap-2 ${
+                className={`relative group px-3 py-2 rounded-md hover:bg-slate-100 transition border border-transparent flex items-center gap-2 ${
                   isCartAnimating ? 'animate-bounce border-green-400/50 bg-green-500/10' : ''
                 }`}
               >
@@ -122,45 +115,45 @@ const Header = ({ onCartToggle }) => {
                 )}
                 <div className="relative">
                   <ShoppingCart
-                    className={`w-8 h-8 relative z-10 transition-all ${
-                      isCartAnimating ? 'text-green-300' : 'text-white'
+                    className={`w-8 h-8 transition-colors ${
+                      isCartAnimating ? 'text-green-500' : 'text-slate-900 group-hover:text-pink-500'
                     }`}
                   />
                   {totalCartItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-[#f08804] text-[#131921] text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg text-[11px]">
+                    <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[11px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow">
                       {totalCartItems}
                     </span>
                   )}
                   {showAddedBadge && (
-                    <span className="absolute -top-3 -right-3 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-bounce shadow-lg border border-white/30">
+                    <span className="absolute -top-3 -right-3 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-bounce shadow border border-white/30">
                       +
                     </span>
                   )}
                 </div>
                 <div className="flex flex-col items-start">
-                  <span className="text-xs text-white/70">Carrito</span>
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-xs text-slate-500">Carrito</span>
+                  <span className="text-sm font-semibold text-slate-900">
                     {totalCartItems > 0 ? `${totalCartItems} items` : '0'}
                   </span>
                 </div>
               </button>
             </div>
 
-            {/* Mobile Icons */}
+            {/* Mobile icons */}
             <div className="flex lg:hidden items-center gap-2 ml-auto">
-              <button onClick={onCartToggle} className="relative p-2 rounded-md hover:bg-white/10 transition-all">
-                <ShoppingCart className="w-6 h-6 text-white" />
+              <button onClick={onCartToggle} className="relative p-2 rounded-md hover:bg-slate-100 transition">
+                <ShoppingCart className="w-6 h-6 text-slate-900" />
                 {totalCartItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#f08804] text-[#131921] text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow">
                     {totalCartItems}
                   </span>
                 )}
               </button>
               <button
                 onClick={() => setIsMenuOpen(true)}
-                className="p-2 rounded-md hover:bg-white/10 transition-all"
+                className="p-2 rounded-md hover:bg-slate-100 transition"
               >
-                <Menu className="w-6 h-6 text-white" />
+                <Menu className="w-6 h-6 text-slate-900" />
               </button>
             </div>
 
@@ -168,33 +161,33 @@ const Header = ({ onCartToggle }) => {
         </div>
 
         {/* Navigation */}
-        <div className="hidden lg:block bg-[#232F3E] border-t border-white/10">
+        <div className="hidden lg:block bg-slate-50 border-t border-slate-200">
           <div className="max-w-[1500px] mx-auto px-4">
             <Navigation rol={rol} isLoggedIn={isLoggedIn} />
           </div>
         </div>
 
-        {/* Mobile Search */}
-        <div className="md:hidden bg-gradient-to-r from-[#1C2E82] via-[#2147b8] to-[#2d4bc7] px-4 pb-2">
-          <div className="bg-white rounded-lg shadow-md">
+        {/* Mobile search */}
+        <div className="md:hidden bg-white px-4 pb-3 border-t border-slate-200">
+          <div className="bg-white rounded-lg shadow-sm border border-slate-200">
             <Search />
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[100] lg:hidden">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsMenuOpen(false)}
           />
-          <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-b from-[#1C2E82] to-[#2147b8] w-72 max-w-[85vw] shadow-2xl overflow-y-auto">
-            <div className="sticky top-0 bg-gradient-to-r from-[#1a2470] to-[#1C2E82] p-4 flex items-center justify-between border-b border-white/10 z-10">
-              <span className="text-white font-semibold text-base">Menú</span>
+          <div className="absolute left-0 top-0 bottom-0 bg-white w-72 max-w-[85vw] shadow-2xl overflow-y-auto">
+            <div className="sticky top-0 bg-white p-4 flex items-center justify-between border-b border-slate-200">
+              <span className="text-slate-900 font-semibold">Menú</span>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all duration-200 active:scale-95"
+                className="p-2 rounded-lg hover:bg-slate-100 transition active:scale-95"
               >
                 <X size={24} />
               </button>

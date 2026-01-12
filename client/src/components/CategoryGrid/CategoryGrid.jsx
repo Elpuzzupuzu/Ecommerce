@@ -1,17 +1,14 @@
 import React from 'react';
-import { Truck, Wrench, ShoppingBag } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { Truck, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Imágenes de ejemplo - reemplaza con tus imports reales
-import domesticoImg from '../../assets/imgs/domestico.jpg';
-import piscinaImg from '../../assets/imgs/piscina-playa.jpg';
-import ferreteriaImg from '../../assets/imgs/ferreteria.jpg';
-import industrialImg from '../../assets/imgs/industrial.jpg';
-
-// CategoryCard simulado - mantén tu componente original
-const CategoryCard = ({ title, image }) => {
+// CategoryCard
+const CategoryCard = ({ title, image, link }) => {
   return (
-    <div className="group bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+    <Link
+      to={link}
+      className="group block bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+    >
       <div className="relative h-64 overflow-hidden">
         <img
           src={image}
@@ -19,63 +16,61 @@ const CategoryCard = ({ title, image }) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-      </div>
-      <div className="p-5 bg-white">
-        <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+        <span className="absolute bottom-4 left-4 text-white text-lg font-semibold drop-shadow">
           {title}
-        </h3>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 };
 
-// CategoryGrid con diseño profesional
+// CategoryGrid
 function CategoryGrid() {
-  // 1. Inicializa el hook de navegación
-  const navigate = useNavigate(); 
-  
+
+  // Ahora usando links directos a imágenes
   const categories = [
     {
-      title: 'Doméstico',
-      image: domesticoImg
+      title: 'Novedades',
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=800&q=80',
+      link: '/catalogo?novedades=true'
     },
     {
-      title: 'Piscina',
-      image: piscinaImg
+      title: 'Más Vendidos',
+      image: 'https://images.unsplash.com/photo-1591012911200-42f792f7e715?auto=format&fit=crop&w=800&q=80',
+      link: '/catalogo?mas-vendidos=true'
     },
     {
-      title: 'Ferretería',
-      image: ferreteriaImg
+      title: 'Regalos y Detalles',
+      image: 'https://images.unsplash.com/photo-1567016543113-95d0c9756e50?auto=format&fit=crop&w=800&q=80',
+      link: '/catalogo?regalos=true'
     },
     {
-      title: 'Industrial',
-      image: industrialImg
+      title: 'Colecciones Especiales',
+      image: 'https://images.unsplash.com/photo-1556910103-1e0b2dffeb59?auto=format&fit=crop&w=800&q=80',
+      link: '/catalogo?colecciones=true'
     },
   ];
-
-  // 2. Función que llama a navigate()
-  const handleViewProducts = () => {
-    // Redirige a la ruta "/productos"
-    navigate("/productos");
-  };
 
   return (
     <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        
         {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
-              Explora por categoría
+        <div className="mb-12 text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+            <div className="w-1 h-6 bg-gray-900 rounded-full"></div>
+            <span className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+              Explora nuestra tienda
             </span>
           </div>
-          <h2 className="text-3xl font-semibold text-gray-900 mb-3">
-            Principales Categorías
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            Encuentra lo que estás buscando
           </h2>
-          <p className="text-gray-600 max-w-3xl">
-            Descubre nuestra amplia gama de productos organizados por categorías, 
-            cada sección está diseñada para satisfacer tus necesidades específicas.
+
+          <p className="text-gray-600 max-w-3xl mx-auto md:mx-0">
+            Descubre una selección de productos pensados para cada ocasión.
+            Compra de forma rápida, segura y desde un solo lugar.
           </p>
         </div>
 
@@ -86,49 +81,60 @@ function CategoryGrid() {
               key={index}
               title={category.title}
               image={category.image}
-              
-
-              
+              link={category.link}
             />
           ))}
         </div>
 
-        {/* Botón CTA */}
+        {/* CTA general */}
         <div className="text-center mb-16">
-          <button 
-            // 3. Asigna la función de navegación al evento onClick
-            onClick={handleViewProducts}  
-            className="px-8 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors duration-200"
+          <Link 
+            to="/catalogo"
+            className="px-10 py-3 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-colors duration-200 shadow-md"
           >
             Ver Todos los Productos
-          </button>
+          </Link>
         </div>
 
-        {/* Servicios destacados */}
+        {/* Beneficios Ecommerce */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-gray-200">
+          
           <div className="flex flex-col items-center text-center group">
-            <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
-              <Truck className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+              <Truck className="w-6 h-6 text-gray-800" />
             </div>
-            <h4 className="font-semibold text-gray-900 mb-2">Envío</h4>
-            <p className="text-gray-600 text-sm">Servicio de entrega nacional</p>
+            <h4 className="font-semibold text-gray-900 mb-2">
+              Envíos a Todo el País
+            </h4>
+            <p className="text-gray-600 text-sm">
+              Recibe tus pedidos de forma rápida y segura.
+            </p>
           </div>
 
           <div className="flex flex-col items-center text-center group">
-            <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-100 transition-colors">
-              <Wrench className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+              <ShieldCheck className="w-6 h-6 text-gray-800" />
             </div>
-            <h4 className="font-semibold text-gray-900 mb-2">Ingeniería del plástico</h4>
-            <p className="text-gray-600 text-sm">Soluciones técnicas especializadas</p>
+            <h4 className="font-semibold text-gray-900 mb-2">
+              Compra Protegida
+            </h4>
+            <p className="text-gray-600 text-sm">
+              Pagos seguros y experiencia confiable.
+            </p>
           </div>
 
           <div className="flex flex-col items-center text-center group">
-            <div className="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-100 transition-colors">
-              <ShoppingBag className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+              <ShoppingBag className="w-6 h-6 text-gray-800" />
             </div>
-            <h4 className="font-semibold text-gray-900 mb-2">Venta / Equipamientos</h4>
-            <p className="text-gray-600 text-sm">Equipo profesional y comercial</p>
+            <h4 className="font-semibold text-gray-900 mb-2">
+              Productos Seleccionados
+            </h4>
+            <p className="text-gray-600 text-sm">
+              Calidad, diseño y tendencia en un solo lugar.
+            </p>
           </div>
+
         </div>
       </div>
     </section>

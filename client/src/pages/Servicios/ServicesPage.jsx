@@ -31,6 +31,7 @@ const ServicesPage = () => {
     return () => observer.disconnect();
   }, []);
 
+  
   return (
     <>
       <HeroSection isVisible={isVisible} />
