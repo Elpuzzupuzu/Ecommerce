@@ -1,107 +1,33 @@
-// pages/ProductDetails/ProductDetails.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { ShoppingCart, ChevronRight, Star, Heart } from "lucide-react";
-import { fetchProductById } from "../../features/products/productsSlice";
-import { gsap } from "gsap";
+import { ShoppingCart, ChevronRight, Package, Shield, Truck } from "lucide-react";
 
-// WISHLIST
+import { fetchProductById } from "../../features/products/productsSlice";
 import useWishlist from "../../hooks/wishList/useWishlist";
 
-// RELACIONADOS
+// Componentes Modulares
+import ProductImage360 from "./components/ProductImage360";
+import StarRating from "./components/StarRating";
 import RelatedProductsSlider from "../relatedProducts/RelatedProductsSlider";
-
-// REVIEWS
 import ProductReviewsList from "../productReviewsList/ProductReviewsList";
 import AddReviewForm from "../productReviewsList/AddReviewForm";
 
 const ProductDetails = ({ onAddToCart }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  
   const products = useSelector((state) => state.adminProducts.items) || [];
-
-  // USUARIO
   const user = useSelector((state) => state.user);
   const userId = user?.user?.id ?? null;
 
   const { isInWishlist, toggleWishlist } = useWishlist(userId);
-
   const [product, setProduct] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [error, setError] = useState(null);
 
-  // ==========================
-  // REFS PARA ROTACIÓN 360
-  // ==========================
-  const imageRef = useRef(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const currentRotation = useRef(0);
-
-  // ==========================
-  // ROTACIÓN 360 CON DRAG
-  // ==========================
-  const handlePointerDown = (e) => {
-    isDragging.current = true;
-    startX.current = e.clientX || e.touches[0].clientX;
-
-    gsap.to(imageRef.current, {
-      scale: 1.05,
-      duration: 0.2,
-    });
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDragging.current) return;
-
-    const x = e.clientX || e.touches[0].clientX;
-    const deltaX = x - startX.current;
-
-    currentRotation.current += deltaX * 0.4;
-
-    gsap.set(imageRef.current, {
-      rotationY: currentRotation.current,
-    });
-
-    startX.current = x;
-  };
-
-  const handlePointerUp = () => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-
-    gsap.to(imageRef.current, {
-      scale: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  // Eventos globales
   useEffect(() => {
-    window.addEventListener("mousemove", handlePointerMove);
-    window.addEventListener("mouseup", handlePointerUp);
-    window.addEventListener("touchmove", handlePointerMove);
-    window.addEventListener("touchend", handlePointerUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handlePointerMove);
-      window.removeEventListener("mouseup", handlePointerUp);
-      window.removeEventListener("touchmove", handlePointerMove);
-      window.removeEventListener("touchend", handlePointerUp);
-    };
-  }, []);
-
-  // ==========================
-  // CARGA DE PRODUCTO
-  // ==========================
-  useEffect(() => {
-    if (!products) return;
-
     const found = products.find((p) => p.id === id);
-
     if (found) {
       setProduct(found);
     } else {
@@ -120,151 +46,94 @@ const ProductDetails = ({ onAddToCart }) => {
     setAddingToCart(false);
   };
 
-  const renderStars = (rating = 4.6) => {
-    const stars = [];
-    const full = Math.floor(rating);
-    const half = rating % 1 !== 0;
-
-    for (let i = 0; i < full; i++) {
-      stars.push(
-        <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
-      );
-    }
-
-    if (half) {
-      stars.push(
-        <div key="half" className="relative">
-          <Star className="w-4 h-4 text-gray-300" />
-          <div className="absolute inset-0 overflow-hidden w-1/2">
-            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          </div>
-        </div>
-      );
-    }
-
-    for (let i = stars.length; i < 5; i++) {
-      stars.push(
-        <Star key={`e-${i}`} className="w-4 h-4 text-gray-300" />
-      );
-    }
-
-    return stars;
-  };
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  const favorite = isInWishlist(product.id);
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-600 font-medium text-lg">{error}</div>;
+  if (!product) return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100"><div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" /></div>;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-6 px-4">
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md p-6">
+    <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50 min-h-screen py-8 px-4">
+      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+        
         {/* Breadcrumb */}
-        <div className="flex items-center gap-1 text-xs text-gray-500 mb-6">
-          <Link to="/">Inicio</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link to="/productos">Productos</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-blue-600 font-medium">
-            {product.nombre}
-          </span>
-        </div>
+        <nav className="flex items-center gap-1 text-sm text-gray-600 px-8 pt-6 pb-4">
+          <Link to="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to="/productos" className="hover:text-blue-600 transition-colors">Productos</Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-blue-600 font-semibold">{product.nombre}</span>
+        </nav>
 
-        <div className="lg:flex lg:gap-8">
-          {/* IMAGEN 360 */}
-          <div
-            className="lg:w-1/2 relative cursor-grab active:cursor-grabbing"
-            onMouseDown={handlePointerDown}
-            onTouchStart={handlePointerDown}
-          >
-            <div className="rounded-xl bg-gray-50 border shadow-inner [perspective:1200px] overflow-hidden">
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-              )}
-              <img
-                ref={imageRef}
-                src={product.imagen}
-                alt={product.nombre}
-                onLoad={() => setImageLoaded(true)}
-                className={`w-full h-80 object-contain [transform-style:preserve-3d] transition-opacity ${
-                  imageLoaded ? "opacity-100" : "opacity-0"
-                }`}
-              />
+        <div className="flex flex-col items-center px-8 pb-8">
+          <ProductImage360 
+            product={product} 
+            userId={userId} 
+            favorite={isInWishlist(product.id)} 
+            onToggleWishlist={toggleWishlist} 
+          />
+
+          <div className="w-full max-w-3xl space-y-8 mt-4">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-bold text-gray-900 leading-tight">{product.nombre}</h1>
+              <div className="flex items-center gap-3">
+                <StarRating rating={product.rating} />
+                <span className="text-base font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-full">
+                  {product.rating ?? 4.6}
+                </span>
+              </div>
             </div>
 
-            {userId && (
-              <button
-                onClick={() => toggleWishlist(product.id)}
-                className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
-              >
-                <Heart
-                  className={`w-6 h-6 ${
-                    favorite
-                      ? "text-red-500 fill-red-500"
-                      : "text-gray-400"
-                  }`}
-                />
-              </button>
-            )}
-          </div>
-
-          {/* DETALLES */}
-          <div className="lg:w-1/2 space-y-6">
-            <h1 className="text-3xl font-bold">{product.nombre}</h1>
-
-            <div className="flex items-center gap-2">
-              {renderStars(product.rating)}
-              <span className="text-xs">{product.rating ?? 4.6}</span>
+            <div className="text-base text-gray-700 leading-relaxed border-t border-gray-200 pt-6">
+              <p className="whitespace-pre-line">{product.descripcion}</p>
             </div>
 
-            <p className="text-sm text-gray-600">{product.descripcion}</p>
+            <div className="flex flex-wrap gap-6 py-6 border-t border-b border-gray-200 bg-gradient-to-r from-blue-50 to-transparent rounded-lg px-6">
+              <FeatureBadge icon={<Package />} text="Envío incluido" />
+              <FeatureBadge icon={<Shield />} text="Garantía 1 año" />
+              <FeatureBadge icon={<Truck />} text="Envío rápido" />
+            </div>
 
             <button
               onClick={handleAddToCart}
               disabled={addingToCart}
-              className={`w-full py-3 rounded-full text-white font-semibold ${
-                addingToCart
-                  ? "bg-gray-400"
-                  : "bg-blue-600 hover:bg-blue-700"
+              className={`w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] ${
+                addingToCart 
+                  ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed" 
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
               }`}
             >
-              {addingToCart ? "Agregando..." : "Agregar al carrito"}
+              {addingToCart ? (
+                <>
+                  <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Agregando...</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-6 h-6" />
+                  <span>Agregar al carrito</span>
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* RELACIONADOS */}
-        <div className="mt-10">
-          <RelatedProductsSlider
-            productId={product.id}
-            categoriaId={product.categoria_principal_id}
-            onAddToCart={onAddToCart}
-          />
+        <div className="mt-12 bg-gradient-to-b from-gray-50 to-white px-8 py-10 border-t border-gray-100">
+          <RelatedProductsSlider productId={product.id} categoriaId={product.categoria_principal_id} onAddToCart={onAddToCart} />
         </div>
 
-        {/* REVIEWS */}
-        <div className="mt-12">
+        <div className="mt-8 px-8 pb-10">
           <ProductReviewsList productId={product.id} />
-          {userId && (
-            <AddReviewForm productId={product.id} userId={userId} />
-          )}
+          {userId && <AddReviewForm productId={product.id} userId={userId} />}
         </div>
       </div>
     </div>
   );
 };
+
+// Pequeño componente interno para los badges
+const FeatureBadge = ({ icon, text }) => (
+  <div className="flex items-center gap-3 group">
+    {React.cloneElement(icon, { className: "w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform" })}
+    <span className="text-sm font-semibold text-gray-800">{text}</span>
+  </div>
+);
 
 export default ProductDetails;
